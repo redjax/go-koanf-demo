@@ -19,15 +19,23 @@ This demo provides a generic configuration loader that can be reused across proj
 
 ```shell
 go-conf-demo/
-├── internal/config/
-│   ├── config.go                          # Generic loader (copy as-is)
-│   ├── appConfig.go                       # App-specific config (customize, build your own in a real app using this as a reference)
-│   └── appConfig_production_example.go    # Production example with OS config paths (~/.config/<app-name>)
-├── main.go                # Demo application
-├── example.config.yaml            # YAML example
-├── example.config.json            # JSON example
-├── example.config.toml            # TOML example
-└── .env.example                   # .env example
+├── cmd/
+│   ├── root.go                            # Cobra CLI root command
+│   └── go-conf-demo/
+│       └── main.go                        # CLI entrypoint
+├── internal/
+│   ├── commands/
+│   │   └── debugCommand/
+│   │       └── debug_cmd.go               # Debug subcommand
+│   └── config/
+│       ├── config.go                      # Generic loader (copy as-is)
+│       ├── appConfig.go                   # App-specific config
+│       └── appConfig_production_example.go # Production example with OS paths
+├── main.go                                # Standalone demo application
+├── example.config.yaml                    # YAML example
+├── example.config.json                    # JSON example
+├── example.config.toml                    # TOML example
+└── .env.example                           # .env example
 ```
 
 ## Quick Start
@@ -57,6 +65,41 @@ go run main.go --server.port=3000 --app.debug=true
 ## Combine sources (CLI has highest priority)
 APP_SERVER_PORT=9090 go run main.go --server.port=3000
 ```
+
+## CLI Example (Cobra)
+
+The repo includes a Cobra CLI example demonstrating config usage in a CLI context.
+
+Build the CLI:
+
+```shell
+go build -o go-conf-demo.exe ./cmd/go-conf-demo
+```
+
+Run the debug command:
+
+```shell
+# Use default config
+./go-conf-demo.exe debug
+
+# Use different config file
+./go-conf-demo.exe debug --config=config.json
+
+# Override with flags
+./go-conf-demo.exe debug --server.port=4000 --app.debug=false
+
+# View available commands and flags
+./go-conf-demo.exe --help
+```
+
+The CLI demonstrates:
+
+- Integration with Cobra command framework
+- Persistent flags across subcommands
+- Config loading in `PersistentPreRunE` hook
+- Passing config to subcommands without import cycles
+
+See [`cmd/root.go`](./cmd/root.go) and [`internal/commands/debugCommand/debug_cmd.go`](./internal/commands/debugCommand/debug_cmd.go) for implementation details.
 
 ## How It Works
 
