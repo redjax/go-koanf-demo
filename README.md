@@ -20,9 +20,11 @@ This demo provides a generic configuration loader that can be reused across proj
 ```shell
 go-conf-demo/
 ├── cmd/
-│   ├── root.go                            # Cobra CLI root command
-│   └── go-conf-demo/
-│       └── main.go                        # CLI entrypoint
+│   ├── api/
+│   │   └── main.go                        # API server entrypoint
+│   ├── go-conf-demo/
+│   │   └── main.go                        # CLI entrypoint
+│   └── root.go                            # Cobra CLI root command
 ├── internal/
 │   ├── commands/
 │   │   └── debugCommand/
@@ -100,6 +102,48 @@ The CLI demonstrates:
 - Passing config to subcommands without import cycles
 
 See [`cmd/root.go`](./cmd/root.go) and [`internal/commands/debugCommand/debug_cmd.go`](./internal/commands/debugCommand/debug_cmd.go) for implementation details.
+
+## API Example
+
+A simple HTTP API example shows config usage in a web service context.
+
+Build and run the API:
+
+```shell
+# Build the API
+go build -o api.exe ./cmd/api
+
+# Run with default config
+./api.exe
+
+# Run with different config
+./api.exe config.json
+
+# Override with environment variables
+APP_SERVER_PORT=8080 ./api.exe
+```
+
+Test the endpoints:
+
+```shell
+# Health check
+curl http://localhost:9090/health
+
+# View configuration
+curl http://localhost:9090/config
+
+# Root endpoint
+curl http://localhost:9090/
+```
+
+The API demonstrates:
+
+- Loading config at server startup
+- Using config values for server settings (host, port, timeouts)
+- Graceful shutdown with configured timeout
+- Exposing sanitized config via endpoint (passwords excluded)
+
+See [`cmd/api/main.go`](./cmd/api/main.go) for implementation details.
 
 ## How It Works
 
