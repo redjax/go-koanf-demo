@@ -6,6 +6,8 @@ Reference app with a generic [`config.go`](./internal/config/config.go) using [k
 
 This demo provides a generic configuration loader that can be reused across projects. The pattern separates the configuration loading mechanism (generic) from app-specific configuration structs (customizable per project).
 
+If your app is simple and you don't need all the complexity of the `internal/config/config.go` example, check the [`simple` example for a self-contained, 1-file version of the config](./cmd/simple/main.go).
+
 ## Features
 
 - Multiple format support: YAML, TOML, JSON, and .env files
