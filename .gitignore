@@ -28,6 +28,7 @@ config.*
 
 ## Allow example configs
 !*example*
+!*.go
 
 ## Logs
 log/
